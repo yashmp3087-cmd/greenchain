@@ -1,0 +1,23 @@
+{
+  "name": "carbon-ledger-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Tree-dataset API for the carbon credit dApp (validation, Merkle proofs, signed uploads)",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test test/"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@openzeppelin/merkle-tree": "^1.0.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "viem": "^2.21.0",
+    "zod": "^3.23.8"
+  }
+}

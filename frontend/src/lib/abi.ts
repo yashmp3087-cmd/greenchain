@@ -1,0 +1,50 @@
+import { parseAbi } from 'viem'
+
+/** Mirrors contracts/contracts/CarbonCreditRegistry.sol — keep both in sync. */
+export const registryAbi = parseAbi([
+  'struct Project { address owner; uint8 status; bool claimed; uint32 submittedTreeCount; uint32 verifiedTreeCount; uint64 submittedAt; uint64 verifiedAt; uint64 validUntil; uint256 creditsIssued; bytes32 treeDataRoot; bytes32 evidenceHash; string name; string location; string evidenceURI; }',
+
+  'function projectCount() view returns (uint256)',
+  'function creditsPerTree() view returns (uint256)',
+  'function validityPeriod() view returns (uint64)',
+  'function paused() view returns (bool)',
+  'function getProject(uint256 id) view returns (Project)',
+  'function isCreditValid(uint256 id) view returns (bool)',
+  'function verifyTreeRecord(uint256 id, bytes32 leaf, bytes32[] proof) view returns (bool)',
+  'function balanceOf(address account, uint256 id) view returns (uint256)',
+  'function retired(uint256 id, address account) view returns (uint256)',
+  'function totalRetired(uint256 id) view returns (uint256)',
+  'function hasRole(bytes32 role, address account) view returns (bool)',
+
+  'function submitProject(string name, string location, uint32 treeCount, bytes32 treeDataRoot, bytes32 evidenceHash, string evidenceURI) returns (uint256)',
+  'function verifyProject(uint256 id, uint32 approvedTreeCount)',
+  'function rejectProject(uint256 id, string reason)',
+  'function revokeProject(uint256 id, string reason)',
+  'function claimCredits(uint256 id)',
+  'function retireCredits(uint256 id, uint256 amount, string reason)',
+  'function safeTransferFrom(address from, address to, uint256 id, uint256 value, bytes data)',
+  'function setCreditsPerTree(uint256 newValue)',
+  'function pause()',
+  'function unpause()',
+  'function grantRole(bytes32 role, address account)',
+  'function revokeRole(bytes32 role, address account)',
+
+  // Custom errors, so wallets/viem can show readable revert reasons.
+  'error ProjectNotFound(uint256 id)',
+  'error InvalidText()',
+  'error InvalidTreeCount()',
+  'error EmptyHash()',
+  'error DuplicateEvidence()',
+  'error InvalidStatus(uint8 current)',
+  'error ConflictOfInterest()',
+  'error NotProjectOwner()',
+  'error NotAuthorizedToRevoke()',
+  'error AlreadyClaimed()',
+  'error CreditExpired()',
+  'error InvalidCredit(uint256 id)',
+  'error ZeroAmount()',
+  'error InvalidCreditsPerTree()',
+  'error AccessControlUnauthorizedAccount(address account, bytes32 neededRole)',
+  'error EnforcedPause()',
+  'error ERC1155InsufficientBalance(address sender, uint256 balance, uint256 needed, uint256 tokenId)',
+])

@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+artifacts/
+cache/
+typechain-types/
+coverage/
+backend/data/
+contracts/deployments/
+*.log

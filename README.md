@@ -1,6 +1,8 @@
-# CarbonLedger
+# CarbonLedger — Decentralized Carbon MRV on MST Blockchain
 
-End-to-end carbon credit dApp for **MST Testnet** (chain ID `91562037`, currency `tMSTC`).
+> **Live Demo**: [https://frontend-one-xi-jj0ha9hn84.vercel.app](https://frontend-one-xi-jj0ha9hn84.vercel.app)
+
+End-to-end carbon credit dApp built for **MST Testnet** (chain ID `91562037`, currency `tMSTC`).
 Landowners register tree-planting projects, verifiers check the tree data, and verified credits can be claimed,
 transferred or retired. Sign in with **Google (email/social login)** or any **WalletConnect / injected wallet**
 (BridgeKey, MetaMask, …) through Reown AppKit + wagmi.

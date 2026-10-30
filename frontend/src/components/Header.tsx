@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAccount, useBalance, useDisconnect } from 'wagmi'
+import { useAccount, useBalance, useDisconnect, useConnect } from 'wagmi'
 import { useAppKit } from '@reown/appkit/react'
 import {
   Coins,
@@ -19,6 +19,7 @@ import { shortAddress } from '../lib/format'
 export function Header() {
   const { address, isConnected, status, chainId } = useAccount()
   const { disconnect } = useDisconnect()
+  const { connectors, connect } = useConnect()
   const { open } = useAppKit()
   const balance = useBalance({
     address,
@@ -28,6 +29,30 @@ export function Header() {
   const [copied, setCopied] = useState(false)
 
   const isCorrectNetwork = chainId === MST_CHAIN_ID
+
+  async function handleConnectWallet() {
+    // 1. Direct browser extension popup on right side (MetaMask, BridgeKey, etc.)
+    if (typeof window !== 'undefined' && (window as any).ethereum) {
+      try {
+        await (window as any).ethereum.request({ method: 'eth_requestAccounts' })
+        const injected = connectors.find((c) => c.id === 'injected' || c.type === 'injected')
+        if (injected) {
+          connect({ connector: injected })
+          return
+        }
+      } catch (err: any) {
+        if (err?.code === 4001) return // User cancelled
+      }
+    }
+
+    // 2. Fallback
+    const injected = connectors.find((c) => c.id === 'injected' || c.type === 'injected')
+    if (injected) {
+      connect({ connector: injected })
+    } else if (open) {
+      open({ view: 'Connect' })
+    }
+  }
 
   async function copy() {
     if (!address) return
@@ -151,10 +176,10 @@ export function Header() {
           <button
             className="btn connect-btn"
             disabled={status === 'connecting' || status === 'reconnecting'}
-            onClick={() => open({ view: 'Connect' })}
+            onClick={handleConnectWallet}
           >
             <Sparkles className="w-4 h-4 text-emerald-300" />
-            <span>{status === 'connecting' || status === 'reconnecting' ? 'Connecting…' : 'Connect Wallet / Google'}</span>
+            <span>{status === 'connecting' || status === 'reconnecting' ? 'Connecting…' : 'Connect Wallet'}</span>
           </button>
         )}
       </div>

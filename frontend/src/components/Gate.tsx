@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useConnect } from 'wagmi'
 import { useAppKit } from '@reown/appkit/react'
 import {
   TreePine,
@@ -17,8 +18,33 @@ import {
 import { MST_CHAIN_ID, MST_EXPLORER, MST_FAUCET } from '../config/chain'
 
 export function Gate() {
+  const { connectors, connect } = useConnect()
   const { open } = useAppKit()
   const [calcTrees, setCalcTrees] = useState(250)
+
+  async function handleConnectWallet() {
+    // 1. Direct browser extension popup on right side (MetaMask, BridgeKey, etc.)
+    if (typeof window !== 'undefined' && (window as any).ethereum) {
+      try {
+        await (window as any).ethereum.request({ method: 'eth_requestAccounts' })
+        const injected = connectors.find((c) => c.id === 'injected' || c.type === 'injected')
+        if (injected) {
+          connect({ connector: injected })
+          return
+        }
+      } catch (err: any) {
+        if (err?.code === 4001) return // User cancelled
+      }
+    }
+
+    // 2. Fallback
+    const injected = connectors.find((c) => c.id === 'injected' || c.type === 'injected')
+    if (injected) {
+      connect({ connector: injected })
+    } else if (open) {
+      open({ view: 'Connect' })
+    }
+  }
 
   // Quick estimation: average 35 kg CO2e per tree per year
   const estimatedCredits = calcTrees * 35
@@ -43,7 +69,7 @@ export function Gate() {
         </p>
 
         <div className="hero-cta-group">
-          <button className="btn hero-primary-btn" onClick={() => open({ view: 'Connect' })}>
+          <button className="btn hero-primary-btn" onClick={handleConnectWallet}>
             <span>Launch dApp / Connect Wallet</span>
             <ArrowRight className="w-5 h-5" />
           </button>
@@ -171,7 +197,7 @@ export function Gate() {
               ≈ {estimatedTonnes} Metric Tonnes of verified carbon removal
             </p>
           </div>
-          <button className="btn primary w-full mt-3" onClick={() => open({ view: 'Connect' })}>
+          <button className="btn primary w-full mt-3" onClick={handleConnectWallet}>
             Submit This Plantation On-Chain
           </button>
         </div>

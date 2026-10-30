@@ -76,6 +76,34 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Prevent text insertion cursor (caret) when clicking between letters on UI headings & elements */
+h1, h2, h3, h4, h5, h6,
+.hero-title, .landing-hero-title,
+.hero-lead, .landing-hero-subtitle,
+.brand-title, .brand-tagline,
+.card-title, .btn, button, nav,
+.badge, .status-badge, .spec-item,
+.pill, .header-bar, .nav-tabs-bar,
+.hero-banner, .gate-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: default;
+}
+
+/* Allow text editing/selection in form inputs and interactive fields */
+input, textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text !important;
+}
+
+code, pre, .font-mono, .crypto-code, .address-text {
+  user-select: all;
+  -webkit-user-select: all;
+}
+
 /* Base Shell */
 .app-shell {
   max-width: 1200px;
